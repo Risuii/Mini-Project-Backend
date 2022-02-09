@@ -3,28 +3,36 @@ const express = require('express');
 
 const app = express();
 
-// import passport
-const passport = require('./lib/passport');
+// import dotenv
+// eslint-disable-next-line no-unused-vars
+const dotenv = require('dotenv').config();
 
-// get port from env, if env not set, use 3000
-const port = process.env.port || 3000;
-
-// eslint-disable-next-line import/order
+// import and use cors
 const cors = require('cors');
 
-// import routes
-const router = require('./routes');
+app.use(cors({
+  origin: '*',
+}));
+
+// get port from env, if env not set, use 3000
+const PORT = process.env.PORT || 3000;
 
 // use middleware for request parsing
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+// import passport
+const passport = require('./lib/passport');
 // use passport for jwt auth
 app.use(passport.initialize());
 
-app.use(cors());
+// import routes
+const router = require('./routes');
+
 // use route
 app.use(router);
 
 // run app in port specified
-app.listen(port);
+app.listen(PORT, () => {
+  console.log(`App is running in http://localhost:${PORT}`);
+});
