@@ -1,0 +1,16 @@
+stages:
+    - deploy
+
+deploy:
+    image: ruby:latest
+    stage: deploy
+    before_script:
+        - git config --global user.email "farisfhm97@gmail.com"
+        - git config --global user.name "Aryya"
+        - git add composer.lock composer.json
+        - git commit -m "add composer lock"
+        - gem install dpl
+    script:
+        - dpl --provide=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY
+    only:
+        - master
