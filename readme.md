@@ -38,3 +38,5 @@ Pakai Postman untuk menjalankan Program
 * akses `localhost:3000/update` dengan memasukan Token yang didapatkan ketika Login di Header, maka akan dapat merubah informasi dari akun yang digunakan
 
 * akses `localhost:3000/delet` dengan memasukan Token yang didapatkan ketika Login di Header, maka akan dapat menghapus akun yang sedang digunakan
+
+* akses alamat `https://project-apicrud.herokuapp.com` untuk menjalankan program secara online
