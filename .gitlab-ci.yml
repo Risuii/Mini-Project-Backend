@@ -1,47 +1,16 @@
 stages:
-  - build
-  - test
-  - deploy
+    - deploy
 
-image: ruby:2.6
-
-cache:
-  paths:
-  - vendor/
-
-build_jekyll:
-  stage: build
-  before_script:
-    - bundle install --path vendor
-  script:
-    - bundle exec jekyll build
-  artifacts:
-    paths:
-    - _site
-  only:
-    - master
-
-test_blog:
-  stage: test
-  script:
-    - bundle exec htmlproofer ./_site --disable-external
-  dependencies:
-    - build_jekyll
-  only:
-    - master
-  allow_failure: true
-
-deploy_blog:
-  stage: deploy
-  image: alpine:3.11
-  cache: {}
-  before_script:
-    - apk add --no-cache openssh-client ca-certificates bash rsync
-    - eval $(ssh-agent -s)
-    - /bin/bash -c 'ssh-add <(echo "$NACITA_SECRET_KEY" | base64 -d)'
-  script:
-    - rsync -e "ssh -o StrictHostKeyChecking=no" -avHP _site/ $DEPLOY_USER@$DEPLOY_HOST:/home/situs/blog
-  dependencies:
-    - build_jekyll
-  only:
-    - master
+deploy:
+    image: ruby:latest
+    stage: deploy
+    before_script:
+        - git config --global user.email "farisfhm97@gmail.com"
+        - git config --global user.name "Aryya"
+        - git add composer.lock composer.json
+        - git commit -m "add composer lock"
+        - gem install dpl
+    script:
+        - dpl --provide=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY
+    only:
+        - master
